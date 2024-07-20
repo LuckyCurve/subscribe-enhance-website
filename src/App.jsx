@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import './App.css'
 
-const url = "http://localhost:8000"
+const url = import.meta.env.VITE_BASE_API_URL
 
 function App() {
     const [black_list, set_black_list] = useState([])
