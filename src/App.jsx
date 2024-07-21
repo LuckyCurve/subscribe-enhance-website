@@ -8,6 +8,7 @@ function App() {
     const [black_list, set_black_list] = useState([])
     const [auth, setAuth] = useState("")
     const [host, setHost] = useState("")
+    const [encode, setEncode] = useState("")
 
     useEffect(() => {
         init(set_black_list)
@@ -50,13 +51,21 @@ function App() {
                 </TableHead>
                 {black_list_com}
             </Table>
+            <TextField label="Host" value={host} onChange={(event) => setHost(event.target.value)} />
             <span>
-                <TextField label="Host" value={host} onChange={(event) => setHost(event.target.value)} />
                 <Button size='large' color='success' variant='contained' onClick={() => {
                     fetch(`${url}/add?host=${host}&auth=${auth}`)
                         .then(res => res.text())
                         .then(resStr => console.log("add response" + resStr))
                 }}>add</Button>
+            </span>
+            <hr />
+            <br />
+            <span>
+                <TextField label="encode" value={encode} onChange={(event) => setEncode(event.target.value)} />
+                <Button size='large' color='success' variant='contained' onClick={async () => {
+                    await navigator.clipboard.writeText(encodeURIComponent(encode));
+                }}>execute</Button>
             </span>
         </>
     )
