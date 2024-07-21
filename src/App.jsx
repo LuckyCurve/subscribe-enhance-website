@@ -1,5 +1,6 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
+import { Icon, Button, Typography, Table, TableHead, TableRow, TableCell, TableBody, ThemeProvider, CssBaseline, createTheme, TextField } from '@mui/material'
 
 const url = import.meta.env.VITE_BASE_API_URL
 
@@ -13,47 +14,49 @@ function App() {
     }, [])
 
     const black_list_com = black_list.map((item, index) => {
-            return <>
-                <tbody>
-                <tr>
-                    <td>{index}</td>
-                    <td>{item}</td>
-                    <td>
-                        <button onClick={() => {
+        return <>
+            <TableBody>
+                <TableRow>
+                    <TableCell align='center'>{index}</TableCell>
+                    <TableCell align='center'>{item}</TableCell>
+                    <TableCell align='center'>
+                        <Button size='small' color='error' variant='contained' onClick={() => {
                             fetch(`${url}/delete?index=${index}&auth=${auth}`)
                                 .then(res => res.text())
                                 .then(resStr => console.log("delete response" + resStr))
                         }}>delete
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </>
-        }
+                        </Button>
+                    </TableCell>
+                </TableRow>
+            </TableBody>
+        </>
+    }
     )
 
     return (
         <>
-
-            <h1>subscribe rules with black</h1>
-            <span>auth: <input type="text" value={auth} onChange={(event) => setAuth(event.target.value)}/></span>
-            <table>
-                <thead>
-                <tr>
-                    <th>id</th>
-                    <th>host</th>
-                    <th>operate</th>
-                </tr>
-                </thead>
+            <Typography variant="h3">
+                <Icon fontSize="large" color='primary'>settings</Icon>
+                subscribe rules with black
+            </Typography>
+            <TextField label="Auth Param" value={auth} onChange={(event) => setAuth(event.target.value)} />
+            <Table sx={{ maxWidth: 500 }} aria-label='proxy host'>
+                <TableHead>
+                    <TableRow>
+                        <TableCell align='center'>id</TableCell>
+                        <TableCell align='center'>host</TableCell>
+                        <TableCell align='center'>operate</TableCell>
+                    </TableRow>
+                </TableHead>
                 {black_list_com}
-            </table>
+            </Table>
             <span>
-                host: <input type="text" value={host} onChange={(event) => setHost(event.target.value)}/>
-                <button onClick={() => {
+                <TextField label="Host" value={host} onChange={(event) => setHost(event.target.value)} />
+                <Button size='large' color='success' variant='contained' onClick={() => {
                     fetch(`${url}/add?host=${host}&auth=${auth}`)
                         .then(res => res.text())
                         .then(resStr => console.log("add response" + resStr))
-                }}>add</button>
+                }}>add</Button>
             </span>
         </>
     )
@@ -65,4 +68,20 @@ function init(setValue) {
         .then(value => setValue(value))
 }
 
-export default App
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+});
+
+export default function DarkApp() {
+    const app = App()
+
+    return (<>
+        <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            {app}
+        </ThemeProvider>
+    </>
+    )
+}
